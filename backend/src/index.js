@@ -15,6 +15,7 @@ const logger = require('./utils/logger');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.set('trust proxy', 1);
 
 // ─── Security Middleware ──────────────────────────────────────────────────────
 app.use(helmet());
@@ -75,8 +76,11 @@ app.use(errorHandler);
 const startServer = async () => {
   try {
     const { pool } = require('./config/database');
+    // Drop and recreate to ensure correct schema
+    await pool.query(`DROP TABLE IF EXISTS notes CASCADE`);
+    await pool.query(`DROP TABLE IF EXISTS users CASCADE`);
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE users (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(100) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -88,7 +92,7 @@ const startServer = async () => {
       )
     `);
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS notes (
+      CREATE TABLE notes (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         title VARCHAR(255) NOT NULL,
