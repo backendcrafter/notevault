@@ -1,4 +1,5 @@
 # ◈ NoteVault
+  Live : https://notevault-eqwcrl0bv-harshpratapsingh8077-8367s-projects.vercel.app
 
 A **production-ready REST API** with JWT authentication, role-based access control (RBAC), and a React frontend — built with Node.js, Express, and PostgreSQL.
 
