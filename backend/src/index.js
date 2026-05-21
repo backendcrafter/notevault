@@ -20,17 +20,11 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    const allowed = [process.env.FRONTEND_URL, 'http://localhost:3000'].filter(Boolean);
-    if (!origin || allowed.includes(origin)) callback(null, true);
-    else callback(new Error(`CORS blocked: ${origin}`));
-  },
-  credentials: true,
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-// Handle preflight BEFORE rate limiter
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 
